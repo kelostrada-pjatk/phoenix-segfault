@@ -1,5 +1,5 @@
-defmodule HelloPhoenix.Router do
-  use HelloPhoenix.Web, :router
+defmodule Segfault.Router do
+  use Segfault.Web, :router
 
   pipeline :browser do
     plug :accepts, ["html"]
@@ -13,19 +13,14 @@ defmodule HelloPhoenix.Router do
     plug :accepts, ["json"]
   end
 
-  scope "/", HelloPhoenix do
+  scope "/", Segfault do
     pipe_through :browser # Use the default browser stack
 
     get "/", PageController, :index
-	get "/hello", HelloController, :index
-	get "/hello/:messenger", HelloController, :show
-	resources "/users", UserController
-
-	get "/test", PageController, :test
   end
 
   # Other scopes may use custom stacks.
-  # scope "/api", HelloPhoenix do
+  # scope "/api", Segfault do
   #   pipe_through :api
   # end
 end

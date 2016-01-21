@@ -1,5 +1,5 @@
-defmodule HelloPhoenix.PageControllerTest do
-  use HelloPhoenix.ConnCase
+defmodule Segfault.PageControllerTest do
+  use Segfault.ConnCase
 
   test "GET /", %{conn: conn} do
     conn = get conn, "/"

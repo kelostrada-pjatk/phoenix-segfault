@@ -1,5 +1,5 @@
-defmodule HelloPhoenix.ErrorView do
-  use HelloPhoenix.Web, :view
+defmodule Segfault.ErrorView do
+  use Segfault.Web, :view
 
   def render("404.html", _assigns) do
     "Page not found"

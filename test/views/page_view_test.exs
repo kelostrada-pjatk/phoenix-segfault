@@ -1,3 +1,3 @@
-defmodule HelloPhoenix.PageViewTest do
-  use HelloPhoenix.ConnCase, async: true
+defmodule Segfault.PageViewTest do
+  use Segfault.ConnCase, async: true
 end

@@ -1,7 +1,3 @@
-defmodule HelloPhoenix.LayoutView do
-  use HelloPhoenix.Web, :view
-
-  def title do
-    "Awesome New Title!"
-  end
+defmodule Segfault.LayoutView do
+  use Segfault.Web, :view
 end

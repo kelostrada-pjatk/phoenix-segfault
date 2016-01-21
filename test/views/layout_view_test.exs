@@ -1,3 +1,3 @@
-defmodule HelloPhoenix.LayoutViewTest do
-  use HelloPhoenix.ConnCase, async: true
+defmodule Segfault.LayoutViewTest do
+  use Segfault.ConnCase, async: true
 end

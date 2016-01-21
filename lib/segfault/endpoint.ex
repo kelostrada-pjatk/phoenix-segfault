@@ -1,14 +1,14 @@
-defmodule HelloPhoenix.Endpoint do
-  use Phoenix.Endpoint, otp_app: :hello_phoenix
+defmodule Segfault.Endpoint do
+  use Phoenix.Endpoint, otp_app: :segfault
 
-  socket "/socket", HelloPhoenix.UserSocket
+  socket "/socket", Segfault.UserSocket
 
   # Serve at "/" the static files from "priv/static" directory.
   #
   # You should set gzip to true if you are running phoenix.digest
   # when deploying your static files in production.
   plug Plug.Static,
-    at: "/", from: :hello_phoenix, gzip: false,
+    at: "/", from: :segfault, gzip: false,
     only: ~w(css fonts images js favicon.ico robots.txt)
 
   # Code reloading can be explicitly enabled under the
@@ -32,8 +32,8 @@ defmodule HelloPhoenix.Endpoint do
 
   plug Plug.Session,
     store: :cookie,
-    key: "_hello_phoenix_key",
-    signing_salt: "m+nTVyOQ"
+    key: "_segfault_key",
+    signing_salt: "4f1asy9t"
 
-  plug HelloPhoenix.Router
+  plug Segfault.Router
 end

@@ -6,12 +6,12 @@
 use Mix.Config
 
 # Configures the endpoint
-config :hello_phoenix, HelloPhoenix.Endpoint,
+config :segfault, Segfault.Endpoint,
   url: [host: "localhost"],
   root: Path.dirname(__DIR__),
-  secret_key_base: "K99jREMcVwQACybVuv/phGVyA+BNbd7e6IWwgtWjz7QBu657of844AgM3A9XB9Xy",
+  secret_key_base: "u0izl4ZWv8GkFQ8w6y3TpzQdwbcQBrI1Efi0cjpBCM+RGTsZw9JLfp+E78M4xNFk",
   render_errors: [accepts: ~w(html json)],
-  pubsub: [name: HelloPhoenix.PubSub,
+  pubsub: [name: Segfault.PubSub,
            adapter: Phoenix.PubSub.PG2]
 
 # Configures Elixir's Logger

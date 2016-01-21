@@ -1,12 +1,12 @@
-defmodule HelloPhoenix.Web do
+defmodule Segfault.Web do
   @moduledoc """
   A module that keeps using definitions for controllers,
   views and so on.
 
   This can be used in your application as:
 
-      use HelloPhoenix.Web, :controller
-      use HelloPhoenix.Web, :view
+      use Segfault.Web, :controller
+      use Segfault.Web, :view
 
   The definitions below will be executed for every view,
   controller, etc, so keep them short and clean, focused
@@ -30,12 +30,12 @@ defmodule HelloPhoenix.Web do
     quote do
       use Phoenix.Controller
 
-      alias HelloPhoenix.Repo
+      alias Segfault.Repo
       import Ecto
       import Ecto.Query, only: [from: 1, from: 2]
 
-      import HelloPhoenix.Router.Helpers
-      import HelloPhoenix.Gettext
+      import Segfault.Router.Helpers
+      import Segfault.Gettext
     end
   end
 
@@ -44,15 +44,14 @@ defmodule HelloPhoenix.Web do
       use Phoenix.View, root: "web/templates"
 
       # Import convenience functions from controllers
-      import Phoenix.Controller, only: [get_csrf_token: 0, get_flash: 2, view_module: 1,
-                                        action_name: 1, controller_module: 1]
+      import Phoenix.Controller, only: [get_csrf_token: 0, get_flash: 2, view_module: 1]
 
       # Use all HTML functionality (forms, tags, etc)
       use Phoenix.HTML
 
-      import HelloPhoenix.Router.Helpers
-      import HelloPhoenix.ErrorHelpers
-      import HelloPhoenix.Gettext
+      import Segfault.Router.Helpers
+      import Segfault.ErrorHelpers
+      import Segfault.Gettext
     end
   end
 
@@ -66,10 +65,10 @@ defmodule HelloPhoenix.Web do
     quote do
       use Phoenix.Channel
 
-      alias HelloPhoenix.Repo
+      alias Segfault.Repo
       import Ecto
       import Ecto.Query, only: [from: 1, from: 2]
-      import HelloPhoenix.Gettext
+      import Segfault.Gettext
     end
   end
 
