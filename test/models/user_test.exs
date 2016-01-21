@@ -3,7 +3,8 @@ defmodule Segfault.UserTest do
 
   alias Segfault.User
 
-  @valid_attrs %{email: "some content", name: "some content", points: 42}
+  @valid_attrs %{email: "some content", name: "some content", points: 0,
+                 password: "some content", password_confirmation: "some content"}
   @invalid_attrs %{}
 
   test "changeset with valid attributes" do

@@ -5,12 +5,17 @@ defmodule Segfault.User do
     field :name, :string
     field :email, :string
     field :points, :integer
+    field :password_digest, :string
 
     timestamps
+
+    # Virtual Fields
+    field :password, :string, virtual: true
+    field :password_confirmation, :string, virtual: true
   end
 
-  @required_fields ~w(name email points)
-  @optional_fields ~w()
+  @required_fields ~w(name email password password_confirmation)
+  @optional_fields ~w(points)
 
   @doc """
   Creates a changeset based on the `model` and `params`.
@@ -21,5 +26,12 @@ defmodule Segfault.User do
   def changeset(model, params \\ :empty) do
     model
     |> cast(params, @required_fields, @optional_fields)
+    |> put_change(:points, 0)
+    |> hash_password
+  end
+
+  def hash_password(changeset) do
+    changeset
+    |> put_change(:password_digest, "ABCDE")
   end
 end
