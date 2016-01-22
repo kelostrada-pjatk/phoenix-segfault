@@ -17,3 +17,6 @@ config :segfault, Segfault.Repo,
   database: "segfault_test",
   hostname: "localhost",
   pool: Ecto.Adapters.SQL.Sandbox
+
+# use easy encryption so tests don't slow down dramatically
+config :comeonin, bcrypt_log_rounds: 4

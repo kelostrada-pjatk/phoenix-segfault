@@ -19,6 +19,9 @@ config :segfault, Segfault.Endpoint,
 # Do not print debug messages in production
 config :logger, level: :info
 
+# Use harder encryption for safer password hashes
+config :comeonin, bcrypt_log_rounds: 14
+
 # ## SSL Support
 #
 # To get SSL working, you will need to add the `https` key
