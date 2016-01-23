@@ -7,6 +7,7 @@ defmodule Segfault.User do
     field :email, :string
     field :points, :integer
     field :password_digest, :string
+    has_many :questions, Segfault.Question
 
     timestamps
 

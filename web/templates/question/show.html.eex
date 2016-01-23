@@ -1,0 +1,28 @@
+<h2>Show question</h2>
+
+<ul>
+
+  <li>
+    <strong>Title:</strong>
+    <%= @question.title %>
+  </li>
+
+  <li>
+    <strong>Content:</strong>
+    <%= @question.content %>
+  </li>
+
+  <li>
+    <strong>Points:</strong>
+    <%= @question.points %>
+  </li>
+
+  <li>
+    <strong>User:</strong>
+    <%= @question.user_id %>
+  </li>
+
+</ul>
+
+<%= link "Edit", to: question_path(@conn, :edit, @question) %>
+<%= link "Back", to: question_path(@conn, :index) %>
