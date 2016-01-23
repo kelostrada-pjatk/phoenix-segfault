@@ -1,12 +1,16 @@
 defmodule Segfault.QuestionController do
   use Segfault.Web, :controller
 
+  alias Segfault.User
   alias Segfault.Question
 
   plug :scrub_params, "question" when action in [:create, :update]
+  plug :authenticate when action in [:new, :create, :edit, :update, :delete]
+  plug :find_question when action in [:show, :edit, :update, :delete]
+  plug :authorize when action in [:edit, :update, :delete]
 
   def index(conn, _params) do
-    questions = Repo.all(Question)
+    questions = Repo.all(from q in Question, preload: [:user])
     render(conn, "index.html", questions: questions)
   end
 
@@ -16,7 +20,8 @@ defmodule Segfault.QuestionController do
   end
 
   def create(conn, %{"question" => question_params}) do
-    changeset = Question.changeset(%Question{}, question_params)
+    user = current_user(conn)
+    changeset = Question.changeset(%Question{user_id: user.id}, question_params)
 
     case Repo.insert(changeset) do
       {:ok, _question} ->
@@ -30,6 +35,7 @@ defmodule Segfault.QuestionController do
 
   def show(conn, %{"id" => id}) do
     question = Repo.get!(Question, id)
+    question = Repo.preload question, :user
     render(conn, "show.html", question: question)
   end
 
@@ -55,13 +61,57 @@ defmodule Segfault.QuestionController do
 
   def delete(conn, %{"id" => id}) do
     question = Repo.get!(Question, id)
-
-    # Here we use delete! (with a bang) because we expect
-    # it to always work (and if it does not, it will raise).
     Repo.delete!(question)
 
     conn
     |> put_flash(:info, "Question deleted successfully.")
     |> redirect(to: question_path(conn, :index))
   end
+
+  ############################
+  # Here we define our Plugs #
+  ############################
+
+  defp authenticate(conn, _) do
+    user = Plug.Conn.get_session(conn, :current_user)
+    if not is_nil(user) do
+      assign(conn, :user, user)
+    else
+      conn
+      |> put_flash(:warning, "User is not authenticated.")
+      |> redirect(to: question_path(conn, :index))
+      |> halt
+    end
+  end
+
+  defp find_question(conn, _) do
+    case Repo.get_by(Question, %{id: conn.params["id"]}) do
+      nil ->
+        conn
+        |> put_flash(:warning, "Question not found.")
+        |> redirect(to: question_path(conn, :index))
+      question ->
+        assign(conn, :question, question)
+    end
+  end
+
+  defp authorize(conn, _) do
+    if conn.assigns[:question].user_id != conn.assigns[:user].id do
+      conn
+      |> put_flash(:warning, "User is not authorized.")
+      |> redirect(to: question_path(conn, :index))
+      |> halt
+    else
+      conn
+    end
+  end
+
+  defp current_user(conn) do
+    user = Plug.Conn.get_session(conn, :current_user)
+    if not is_nil(user) do
+      Repo.get_by(User, %{id: user.id})
+    end
+    user
+  end
+
 end

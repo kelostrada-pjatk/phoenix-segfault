@@ -10,8 +10,8 @@ defmodule Segfault.Question do
     timestamps
   end
 
-  @required_fields ~w(title content points)
-  @optional_fields ~w()
+  @required_fields ~w(title content)
+  @optional_fields ~w(points)
 
   @doc """
   Creates a changeset based on the `model` and `params`.
@@ -22,5 +22,6 @@ defmodule Segfault.Question do
   def changeset(model, params \\ :empty) do
     model
     |> cast(params, @required_fields, @optional_fields)
+    |> put_change(:points, 0)
   end
 end

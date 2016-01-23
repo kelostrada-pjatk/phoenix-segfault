@@ -6,7 +6,7 @@
       <th>Title</th>
       <th>Content</th>
       <th>Points</th>
-      <th>User</th>
+      <th>Author</th>
 
       <th></th>
     </tr>
@@ -17,12 +17,14 @@
       <td><%= question.title %></td>
       <td><%= question.content %></td>
       <td><%= question.points %></td>
-      <td><%= question.user_id %></td>
+      <td><%= question.user.name %></td>
 
       <td class="text-right">
         <%= link "Show", to: question_path(@conn, :show, question), class: "btn btn-default btn-xs" %>
+        <%= if question.user == current_user(@conn) do %>
         <%= link "Edit", to: question_path(@conn, :edit, question), class: "btn btn-default btn-xs" %>
         <%= link "Delete", to: question_path(@conn, :delete, question), method: :delete, data: [confirm: "Are you sure?"], class: "btn btn-danger btn-xs" %>
+        <% end %>
       </td>
     </tr>
 <% end %>

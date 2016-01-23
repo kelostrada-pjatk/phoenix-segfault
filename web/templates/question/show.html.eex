@@ -19,10 +19,12 @@
 
   <li>
     <strong>User:</strong>
-    <%= @question.user_id %>
+    <%= @question.user.name %>
   </li>
 
 </ul>
 
+<%= if current_user(@conn) == @question.user do %>
 <%= link "Edit", to: question_path(@conn, :edit, @question) %>
+<%= end %>
 <%= link "Back", to: question_path(@conn, :index) %>
