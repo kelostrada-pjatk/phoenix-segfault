@@ -85,14 +85,8 @@ defmodule Segfault.QuestionController do
   end
 
   defp find_question(conn, _) do
-    case Repo.get_by(Question, %{id: conn.params["id"]}) do
-      nil ->
-        conn
-        |> put_flash(:warning, "Question not found.")
-        |> redirect(to: question_path(conn, :index))
-      question ->
-        assign(conn, :question, question)
-    end
+    question = Repo.get_by!(Question, %{id: conn.params["id"]})
+    assign(conn, :question, question)
   end
 
   defp authorize(conn, _) do
