@@ -24,6 +24,9 @@
               <%= link "Log out", to: session_path(@conn, :delete, user.id), method: :delete %>
               <% else %>
               <%= link "Log in", to: session_path(@conn, :new) %>
+              </li>
+              <li>
+              <%= link "Register", to: user_path(@conn, :new) %>
               <% end %>
             </li>
           </ul>

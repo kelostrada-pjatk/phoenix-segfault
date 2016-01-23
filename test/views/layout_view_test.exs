@@ -29,6 +29,6 @@ defmodule Segfault.LayoutViewTest do
     conn = delete conn, session_path(conn, :delete, user)
     refute get_session(conn, :current_user)
     assert get_flash(conn, :info) == "Signed out successfully!"
-    assert redirected_to(conn) == page_path(conn, :index)
+    assert redirected_to(conn) == question_path(conn, :index)
   end
 end

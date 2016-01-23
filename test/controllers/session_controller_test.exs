@@ -18,20 +18,20 @@ defmodule Segfault.SessionControllerTest do
     conn = post conn, session_path(conn, :create), user: %{name: "test", password: "test"}
     assert get_session(conn, :current_user)
     assert get_flash(conn, :info) == "Sign in successful!"
-    assert redirected_to(conn) == page_path(conn, :index)
+    assert redirected_to(conn) == question_path(conn, :index)
   end
 
   test "does not create a session with a bad login", %{conn: conn} do
     conn = post conn, session_path(conn, :create), user: %{name: "test", password: "wrong"}
     refute get_session(conn, :current_user)
     assert get_flash(conn, :error) == "Invalid username/password combination!"
-    assert redirected_to(conn) == page_path(conn, :index)
+    assert redirected_to(conn) == question_path(conn, :index)
   end
 
   test "does not create a session if user does not exist", %{conn: conn} do
     conn = post conn, session_path(conn, :create), user: %{name: "foo", password: "wrong"}
     assert get_flash(conn, :error) == "Invalid username/password combination!"
-    assert redirected_to(conn) == page_path(conn, :index)
+    assert redirected_to(conn) == question_path(conn, :index)
   end
 
 end

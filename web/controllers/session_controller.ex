@@ -23,7 +23,7 @@ defmodule Segfault.SessionController do
   def delete(conn, _params) do
     delete_session(conn, :current_user)
     |> put_flash(:info, "Signed out successfully!")
-    |> redirect(to: page_path(conn, :index))
+    |> redirect(to: question_path(conn, :index))
   end
 
   defp sign_in(user, _password, conn) when is_nil(user) do
@@ -34,7 +34,7 @@ defmodule Segfault.SessionController do
     if checkpw(password, user.password_digest) do
       put_session(conn, :current_user, %{id: user.id, name: user.name, points: user.points})
       |> put_flash(:info, "Sign in successful!")
-      |> redirect(to: page_path(conn, :index))
+      |> redirect(to: question_path(conn, :index))
     else
       failed_login(conn)
     end
@@ -43,7 +43,7 @@ defmodule Segfault.SessionController do
   defp failed_login(conn) do
     put_session(conn, :current_user, nil)
     |> put_flash(:error, "Invalid username/password combination!")
-    |> redirect(to: page_path(conn, :index))
+    |> redirect(to: question_path(conn, :index))
     |> halt()
   end
 
