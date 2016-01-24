@@ -24,6 +24,8 @@
 
 </ul>
 
+<%= render Segfault.AnswerView, "index.html", question: @question, answers: @question.answers, conn: @conn %>
+
 <%= if current_user(@conn) == @question.user do %>
 <%= link "Edit", to: question_path(@conn, :edit, @question) %>
 <%= end %>

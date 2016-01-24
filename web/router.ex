@@ -19,7 +19,9 @@ defmodule Segfault.Router do
     get "/", QuestionController, :index
     resources "/users", UserController
     resources "/sessions", SessionController, only: [:new, :create, :delete]
-    resources "/questions", QuestionController
+    resources "/questions", QuestionController do
+      resources "/answers", AnswerController
+    end
   end
 
   # Other scopes may use custom stacks.

@@ -36,6 +36,7 @@ defmodule Segfault.QuestionController do
   def show(conn, %{"id" => id}) do
     question = Repo.get!(Question, id)
     question = Repo.preload question, :user
+    question = Repo.preload question, :answers
     render(conn, "show.html", question: question)
   end
 

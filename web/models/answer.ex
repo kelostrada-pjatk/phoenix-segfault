@@ -1,17 +1,16 @@
-defmodule Segfault.Question do
+defmodule Segfault.Answer do
   use Segfault.Web, :model
 
-  schema "questions" do
-    field :title, :string
+  schema "answers" do
     field :content, :string
     field :points, :integer
+    belongs_to :question, Segfault.Question
     belongs_to :user, Segfault.User
-    has_many :answers, Segfault.Answer
 
     timestamps
   end
 
-  @required_fields ~w(title content)
+  @required_fields ~w(content)
   @optional_fields ~w(points)
 
   @doc """

@@ -1,0 +1,32 @@
+<h3>Listing answers</h3>
+
+<table class="table">
+  <thead>
+    <tr>
+      <th>Content</th>
+      <th>Points</th>
+      <th>Question</th>
+      <th>User</th>
+
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+<%= for answer <- @answers do %>
+    <tr>
+      <td><%= answer.content %></td>
+      <td><%= answer.points %></td>
+      <td><%= answer.question_id %></td>
+      <td><%= answer.user_id %></td>
+
+      <td class="text-right">
+        <%= link "Show", to: question_answer_path(@conn, :show, @question, answer), class: "btn btn-default btn-xs" %>
+        <%= link "Edit", to: question_answer_path(@conn, :edit, @question, answer), class: "btn btn-default btn-xs" %>
+        <%= link "Delete", to: question_answer_path(@conn, :delete, @question, answer), method: :delete, data: [confirm: "Are you sure?"], class: "btn btn-danger btn-xs" %>
+      </td>
+    </tr>
+<% end %>
+  </tbody>
+</table>
+
+<%= link "New answer", to: question_answer_path(@conn, :new, @question) %>
