@@ -5,6 +5,7 @@ defmodule Segfault.AnswerController do
 
   plug :scrub_params, "answer" when action in [:create, :update]
   plug :find_question
+  plug Segfault.Plugs.Authenticate when action in [:new, :create, :edit, :update, :delete]
 
   def index(conn, _params) do
     answers = Repo.all(Answer)
@@ -17,7 +18,7 @@ defmodule Segfault.AnswerController do
   end
 
   def create(conn, %{"answer" => answer_params}) do
-    changeset = Answer.changeset(%Answer{question_id: conn.assigns[:question].id}, answer_params)
+    changeset = Answer.changeset(%Answer{question_id: conn.assigns[:question].id, user_id: conn.assigns[:user].id}, answer_params)
 
     case Repo.insert(changeset) do
       {:ok, _answer} ->
