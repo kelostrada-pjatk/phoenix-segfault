@@ -5,9 +5,9 @@ defmodule Segfault.QuestionController do
   alias Segfault.Question
 
   plug :scrub_params, "question" when action in [:create, :update]
-  plug :authenticate when action in [:new, :create, :edit, :update, :delete]
+  plug Segfault.Plugs.Authenticate when action in [:new, :create, :edit, :update, :delete]
   plug :find_question when action in [:show, :edit, :update, :delete]
-  plug :authorize when action in [:edit, :update, :delete]
+  plug Segfault.Plugs.Authorize, :question when action in [:edit, :update, :delete]
 
   def index(conn, _params) do
     questions = Repo.all(from q in Question, preload: [:user])
@@ -73,32 +73,9 @@ defmodule Segfault.QuestionController do
   # Here we define our Plugs #
   ############################
 
-  defp authenticate(conn, _) do
-    user = Plug.Conn.get_session(conn, :current_user)
-    if not is_nil(user) do
-      assign(conn, :user, user)
-    else
-      conn
-      |> put_flash(:warning, "User is not authenticated.")
-      |> redirect(to: question_path(conn, :index))
-      |> halt
-    end
-  end
-
   defp find_question(conn, _) do
     question = Repo.get_by!(Question, %{id: conn.params["id"]})
     assign(conn, :question, question)
-  end
-
-  defp authorize(conn, _) do
-    if conn.assigns[:question].user_id != conn.assigns[:user].id do
-      conn
-      |> put_flash(:warning, "User is not authorized.")
-      |> redirect(to: question_path(conn, :index))
-      |> halt
-    else
-      conn
-    end
   end
 
   defp current_user(conn) do

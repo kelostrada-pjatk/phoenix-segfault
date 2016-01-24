@@ -4,7 +4,7 @@ defmodule Segfault.AnswerController do
   alias Segfault.Answer
 
   plug :scrub_params, "answer" when action in [:create, :update]
-  plug :assign_question
+  plug :find_question
 
   def index(conn, _params) do
     answers = Repo.all(Answer)
@@ -17,7 +17,7 @@ defmodule Segfault.AnswerController do
   end
 
   def create(conn, %{"answer" => answer_params}) do
-    changeset = Answer.changeset(%Answer{}, answer_params)
+    changeset = Answer.changeset(%Answer{question_id: conn.assigns[:question].id}, answer_params)
 
     case Repo.insert(changeset) do
       {:ok, _answer} ->
@@ -66,17 +66,9 @@ defmodule Segfault.AnswerController do
     |> redirect(to: question_answer_path(conn, :index, conn.assigns[:question]))
   end
 
-  defp assign_question(conn, _) do
-
-    %{"question_id" => question_id} = conn.params
-    if question = Repo.get(Segfault.Question, question_id) do
-      assign(conn, :question, question)
-    else
-      conn
-      |> put_flash(:error, "Invalid question!")
-      |> redirect(to: question_path(conn, :index))
-      |> halt
-    end
+  defp find_question(conn, _) do
+    question = Repo.get_by!(Segfault.Question, %{id: conn.params["question_id"]})
+    assign(conn, :question, question)
   end
 
 end
