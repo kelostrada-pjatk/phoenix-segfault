@@ -34,9 +34,17 @@ defmodule Segfault.QuestionController do
   end
 
   def show(conn, %{"id" => id}) do
-    question = Repo.get!(Question, id)
-    question = Repo.preload question, :user
-    question = Repo.preload question, :answers
+
+    questions = Repo.all from q in Question,
+               left_join: us in assoc(q, :user),
+               preload: [user: us],
+               left_join: a in assoc(q, :answers),
+               left_join: u in assoc(a, :user),
+               where: q.id == ^id,
+               preload: [answers: {a, user: u}]
+
+    question = List.first(questions)
+
     render(conn, "show.html", question: question)
   end
 

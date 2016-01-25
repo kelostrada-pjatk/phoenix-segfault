@@ -30,5 +30,6 @@
 <% end %>
   </tbody>
 </table>
-
+<%= if current_user(@conn) do %>
 <%= link "New question", to: question_path(@conn, :new) %>
+<%= end %>

@@ -3,9 +3,8 @@
 <table class="table">
   <thead>
     <tr>
-      <th>Content</th>
       <th>Points</th>
-      <th>Question</th>
+      <th>Content</th>
       <th>User</th>
 
       <th></th>
@@ -14,19 +13,20 @@
   <tbody>
 <%= for answer <- @answers do %>
     <tr>
-      <td><%= answer.content %></td>
       <td><%= answer.points %></td>
-      <td><%= answer.question_id %></td>
-      <td><%= answer.user_id %></td>
+      <td><%= answer.content %></td>
+      <td><%= answer.user.name %></td>
 
       <td class="text-right">
-        <%= link "Show", to: question_answer_path(@conn, :show, @question, answer), class: "btn btn-default btn-xs" %>
+        <%= if current_user(@conn) && answer.user_id == current_user(@conn).id do %>
         <%= link "Edit", to: question_answer_path(@conn, :edit, @question, answer), class: "btn btn-default btn-xs" %>
         <%= link "Delete", to: question_answer_path(@conn, :delete, @question, answer), method: :delete, data: [confirm: "Are you sure?"], class: "btn btn-danger btn-xs" %>
+        <%= end %>
       </td>
     </tr>
 <% end %>
   </tbody>
 </table>
-
+<%= if current_user(@conn) do %>
 <%= link "New answer", to: question_answer_path(@conn, :new, @question) %>
+<%= end %>

@@ -8,7 +8,11 @@ defmodule Segfault.AnswerController do
   plug Segfault.Plugs.Authenticate when action in [:new, :create, :edit, :update, :delete]
 
   def index(conn, _params) do
-    answers = Repo.all(Answer)
+    question_id = conn.assigns[:question].id
+    answers = Repo.all from a in Answer,
+              left_join: u in assoc(a, :user),
+              where: a.question_id == ^question_id,
+              preload: [user: u]
     render(conn, "index.html", answers: answers)
   end
 
@@ -32,6 +36,7 @@ defmodule Segfault.AnswerController do
 
   def show(conn, %{"id" => id}) do
     answer = Repo.get!(Answer, id)
+    answer = Repo.preload(answer, :user)
     render(conn, "show.html", answer: answer)
   end
 
