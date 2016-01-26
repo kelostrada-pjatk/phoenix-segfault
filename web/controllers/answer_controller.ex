@@ -35,19 +35,19 @@ defmodule Segfault.AnswerController do
   end
 
   def show(conn, %{"id" => id}) do
-    answer = Repo.get!(Answer, id)
+    answer = Repo.get_by!(Answer, id: id, question_id: conn.assigns[:question].id)
     answer = Repo.preload(answer, :user)
     render(conn, "show.html", answer: answer)
   end
 
   def edit(conn, %{"id" => id}) do
-    answer = Repo.get!(Answer, id)
+    answer = Repo.get_by!(Answer, id: id, question_id: conn.assigns[:question].id)
     changeset = Answer.changeset(answer)
     render(conn, "edit.html", answer: answer, changeset: changeset)
   end
 
   def update(conn, %{"id" => id, "answer" => answer_params}) do
-    answer = Repo.get!(Answer, id)
+    answer = Repo.get_by!(Answer, id: id, question_id: conn.assigns[:question].id)
     changeset = Answer.changeset(answer, answer_params)
 
     case Repo.update(changeset) do
@@ -61,7 +61,7 @@ defmodule Segfault.AnswerController do
   end
 
   def delete(conn, %{"id" => id}) do
-    answer = Repo.get!(Answer, id)
+    answer = Repo.get_by!(Answer, id: id, question_id: conn.assigns[:question].id)
 
     # Here we use delete! (with a bang) because we expect
     # it to always work (and if it does not, it will raise).
