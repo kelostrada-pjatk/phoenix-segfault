@@ -4,6 +4,7 @@ defmodule Segfault.UserController do
   alias Segfault.User
 
   plug :scrub_params, "user" when action in [:create, :update]
+  plug Segfault.Plugs.FindResource, %{resource: :user, type: User} when action in [:show, :edit, :update, :delete]
 
   def index(conn, _params) do
     users = Repo.all(User)
@@ -28,19 +29,19 @@ defmodule Segfault.UserController do
     end
   end
 
-  def show(conn, %{"id" => id}) do
-    user = Repo.get!(User, id)
+  def show(conn, _params) do
+    user = conn.assigns[:user]
     render(conn, "show.html", user: user)
   end
 
-  def edit(conn, %{"id" => id}) do
-    user = Repo.get!(User, id)
+  def edit(conn, _params) do
+    user = conn.assigns[:user]
     changeset = User.changeset(user)
     render(conn, "edit.html", user: user, changeset: changeset)
   end
 
-  def update(conn, %{"id" => id, "user" => user_params}) do
-    user = Repo.get!(User, id)
+  def update(conn, %{"user" => user_params}) do
+    user = conn.assigns[:user]
     changeset = User.changeset(user, user_params)
 
     case Repo.update(changeset) do
@@ -53,11 +54,9 @@ defmodule Segfault.UserController do
     end
   end
 
-  def delete(conn, %{"id" => id}) do
-    user = Repo.get!(User, id)
+  def delete(conn, _params) do
+    user = conn.assigns[:user]
 
-    # Here we use delete! (with a bang) because we expect
-    # it to always work (and if it does not, it will raise).
     Repo.delete!(user)
 
     conn

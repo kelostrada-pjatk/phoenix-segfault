@@ -1,12 +1,11 @@
 defmodule Segfault.QuestionController do
   use Segfault.Web, :controller
 
-  alias Segfault.User
   alias Segfault.Question
 
   plug :scrub_params, "question" when action in [:create, :update]
+  plug Segfault.Plugs.FindResource, %{resource: :question, type: Question} when action in [:show, :edit, :update, :delete]
   plug Segfault.Plugs.Authenticate when action in [:new, :create, :edit, :update, :delete]
-  plug :find_question when action in [:show, :edit, :update, :delete]
   plug Segfault.Plugs.Authorize, :question when action in [:edit, :update, :delete]
 
   def index(conn, _params) do
@@ -20,7 +19,7 @@ defmodule Segfault.QuestionController do
   end
 
   def create(conn, %{"question" => question_params}) do
-    user = current_user(conn)
+    user = conn.assigns[:current_user]
     changeset = Question.changeset(%Question{user_id: user.id}, question_params)
 
     case Repo.insert(changeset) do
@@ -81,17 +80,12 @@ defmodule Segfault.QuestionController do
   # Here we define our Plugs #
   ############################
 
-  defp find_question(conn, _) do
-    question = Repo.get_by!(Question, %{id: conn.params["id"]})
-    assign(conn, :question, question)
-  end
-
-  defp current_user(conn) do
-    user = Plug.Conn.get_session(conn, :current_user)
-    if not is_nil(user) do
-      Repo.get_by(User, %{id: user.id})
-    end
-    user
-  end
+  #defp current_user(conn) do
+  #  user = Plug.Conn.get_session(conn, :current_user)
+  #  if not is_nil(user) do
+  #    Repo.get_by(User, %{id: user.id})
+  #  end
+  #  user
+  #end
 
 end

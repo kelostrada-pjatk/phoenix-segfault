@@ -11,12 +11,12 @@ defmodule Segfault.LayoutViewTest do
 
   test "current user returns the user with points in the session", %{conn: conn} do
     conn = post conn, session_path(conn, :create), user: %{name: "test", password: "test"}
+    conn = get conn, "/"
     current_user = LayoutView.current_user(conn)
     assert current_user
     assert current_user.name == "test"
     assert current_user.points
   end
-
 
   test "current user returns nothing if there is no user in the session" do
     user = Repo.get_by(User, %{name: "test"})
@@ -27,8 +27,12 @@ defmodule Segfault.LayoutViewTest do
   test "deletes the user session if it exists", %{conn: conn} do
     user = Repo.get_by(User, %{name: "test"})
     conn = delete conn, session_path(conn, :delete, user)
-    refute get_session(conn, :current_user)
-    assert get_flash(conn, :info) == "Signed out successfully!"
     assert redirected_to(conn) == question_path(conn, :index)
+    assert get_flash(conn, :info) == "Signed out successfully!"
+    refute get_session(conn, :current_user)
+    refute LayoutView.current_user(conn)
+    conn = get conn, "/"
+    refute get_session(conn, :current_user)
+    refute LayoutView.current_user(conn)
   end
 end

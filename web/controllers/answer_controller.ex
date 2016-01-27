@@ -2,9 +2,11 @@ defmodule Segfault.AnswerController do
   use Segfault.Web, :controller
 
   alias Segfault.Answer
+  alias Segfault.Question
 
   plug :scrub_params, "answer" when action in [:create, :update]
-  plug :find_question
+  plug Segfault.Plugs.FindResource, %{resource: :question, type: Question, key: "question_id"}
+  plug Segfault.Plugs.FindResource, %{resource: :answer, type: Answer, dependency: :question} when action in [:show, :edit, :update, :delete]
   plug Segfault.Plugs.Authenticate when action in [:new, :create, :edit, :update, :delete]
 
   def index(conn, _params) do
@@ -34,20 +36,20 @@ defmodule Segfault.AnswerController do
     end
   end
 
-  def show(conn, %{"id" => id}) do
-    answer = Repo.get_by!(Answer, id: id, question_id: conn.assigns[:question].id)
+  def show(conn, _params) do
+    answer = conn.assigns[:answer]
     answer = Repo.preload(answer, :user)
     render(conn, "show.html", answer: answer)
   end
 
-  def edit(conn, %{"id" => id}) do
-    answer = Repo.get_by!(Answer, id: id, question_id: conn.assigns[:question].id)
+  def edit(conn, _params) do
+    answer = conn.assigns[:answer]
     changeset = Answer.changeset(answer)
     render(conn, "edit.html", answer: answer, changeset: changeset)
   end
 
-  def update(conn, %{"id" => id, "answer" => answer_params}) do
-    answer = Repo.get_by!(Answer, id: id, question_id: conn.assigns[:question].id)
+  def update(conn, %{"answer" => answer_params}) do
+    answer = conn.assigns[:answer]
     changeset = Answer.changeset(answer, answer_params)
 
     case Repo.update(changeset) do
@@ -60,21 +62,14 @@ defmodule Segfault.AnswerController do
     end
   end
 
-  def delete(conn, %{"id" => id}) do
-    answer = Repo.get_by!(Answer, id: id, question_id: conn.assigns[:question].id)
+  def delete(conn, _params) do
+    answer = conn.assigns[:answer]
 
-    # Here we use delete! (with a bang) because we expect
-    # it to always work (and if it does not, it will raise).
     Repo.delete!(answer)
 
     conn
     |> put_flash(:info, "Answer deleted successfully.")
     |> redirect(to: question_answer_path(conn, :index, conn.assigns[:question]))
-  end
-
-  defp find_question(conn, _) do
-    question = Repo.get_by!(Segfault.Question, %{id: conn.params["question_id"]})
-    assign(conn, :question, question)
   end
 
 end
